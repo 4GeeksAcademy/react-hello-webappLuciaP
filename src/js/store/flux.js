@@ -1,42 +1,102 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			user: "",
+			agenda: []
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
+			getUser: () => {
+				const requestOptions = { method: "GET", redirect: "follow" };
+				fetch("https://playground.4geeks.com/contact/agendas/luciap", requestOptions)
+					.then(response => response.json())
+					.then(result => console.log(result))
+					.catch(error => console.error("Error fetching user:", error));
 			},
-			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
+			createUser: contactData => {
+				const myHeaders = new Headers();
+				myHeaders.append("Content-Type", "application/json");
+
+				const raw = JSON.stringify(contactData);
+
+				const requestOptions = {
+					method: "POST",
+					headers: myHeaders,
+					body: raw,
+					redirect: "follow"
+				};
+
+				fetch("https://playground.4geeks.com/contact/agendas/luciap/contacts", requestOptions)
+					.then(response => {
+						if (!response.ok) {
+							throw new Error(`HTTP error! Status: ${response.status}`);
+						}
+						return response.json();
+					})
+					.then(result => console.log("User created:", result))
+					.catch(error => console.error("Error creating user:", error));
 			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
+			getAgenda: () => {
+				fetch("https://playground.4geeks.com/contact/agendas/luciap", {
+					method: "GET",
+					redirect: "follow"
+				})
+					.then(response => response.json())
+					.then(result => {
+						setStore({ agenda: result });
+					})
+					.catch(error => console.error("Error fetching agenda:", error));
+			},
+			deleteContact: (contactId, contact) => {
+				const myHeaders = new Headers();
+				myHeaders.append("Content-Type", "application/json");
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
+				const raw = JSON.stringify(contact);
 
-				//reset the global store
-				setStore({ demo: demo });
+				const requestOptions = {
+					method: "DELETE",
+					headers: myHeaders,
+					body: raw,
+					redirect: "follow"
+				};
+
+				fetch(`https://playground.4geeks.com/contact/agendas/luciap/contacts/${contactId}`, requestOptions)
+					.then(response => {
+						if (!response.ok) {
+							throw new Error(`HTTP error! Status: ${response.status}`);
+						}
+						return response.json();
+					})
+					.then(result => {
+						console.log("Contact deleted:", result);
+						getActions().getAgenda();
+					})
+					.catch(error => console.error("Error deleting contact:", error));
+			},
+			updateContact: (contactId, contact) => {
+				const myHeaders = new Headers();
+				myHeaders.append("Content-Type", "application/json");
+
+				const raw = JSON.stringify(contact);
+
+				const requestOptions = {
+					method: "PUT",
+					headers: myHeaders,
+					body: raw,
+					redirect: "follow"
+				};
+
+				fetch(`https://playground.4geeks.com/contact/agendas/luciap/contacts/${contactId}`, requestOptions)
+					.then(response => {
+						if (!response.ok) {
+							throw new Error(`HTTP error! Status: ${response.status}`);
+						}
+						return response.json();
+					})
+					.then(result => {
+						console.log("Contact updated:", result);
+						getActions().getAgenda();
+					})
+					.catch(error => console.error("Error updating contact:", error));
 			}
 		}
 	};

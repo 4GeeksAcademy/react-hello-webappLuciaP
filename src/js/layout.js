@@ -1,34 +1,27 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import ScrollToTop from "./component/scrollToTop";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
-import { Home } from "./views/home";
-import { Demo } from "./views/demo";
-import { Single } from "./views/single";
+// import ScrollToTop from "./component/scrollToTop";
+
 import injectContext from "./store/appContext";
 
-import { Navbar } from "./component/navbar";
-import { Footer } from "./component/footer";
+import { Contacts } from "./views/Contacts.js";
+import { AddContact } from "./views/AddContact.js";
 
-//create your first component
-const Layout = () => {
-	//the basename is used when your project is published in a subdirectory and not in the root of the domain
-	// you can set the basename on the .env file located at the root of this project, E.g: BASENAME=/react-hello-webapp/
-	const basename = process.env.BASENAME || "";
-
+export const Layout = () => {
 	return (
 		<div>
-			<BrowserRouter basename={basename}>
-				<ScrollToTop>
-					<Navbar />
-					<Routes>
-						<Route path="/" element={<Home />} />
-						<Route path="/demo" element={<Demo />} />
-						<Route path="/single/:theid" element={<Single />} />
-						<Route path="*" element={<h1>Not found!</h1>} />
-					</Routes>
-					<Footer />
-				</ScrollToTop>
+			<BrowserRouter>
+				<div>
+					<Switch>
+						<Route exact path="/index.html" component={Contacts} />
+						<Route exact path="/" component={Contacts} />
+						<Route exact path="/contacts" component={Contacts} />
+						<Route exact path="/add" component={AddContact} />
+						<Route exact path="/edit" component={AddContact} />
+						<Route render={() => <h1 className="notfound">Not found!</h1>} />
+					</Switch>
+				</div>
 			</BrowserRouter>
 		</div>
 	);
