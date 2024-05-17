@@ -6,10 +6,11 @@ export const AddContact = () => {
 	const { store, actions } = useContext(Context);
 
 	const [contactData, setContactData] = useState({
-		full_name: "",
+		name: "",
+		phone: "",
 		email: "",
 		address: "",
-		phone: "",
+		
 		agenda_slug: "luciap"
 	});
 
@@ -42,23 +43,13 @@ export const AddContact = () => {
 				<h1 className="text-center mt-5">Add a new contact</h1>
 				<form>
 					<div className="form-group">
-						<label>Full Name</label>
+						<label>Name</label>
 						<input
 							type="text"
 							className="form-control"
-							placeholder="Full Name"
+							placeholder="Name"
 							onChange={handleChange}
-							name="full_name"
-						/>
-					</div>
-					<div className="form-group">
-						<label>Email</label>
-						<input
-							type="email"
-							className="form-control"
-							placeholder="Enter email"
-							onChange={handleChange}
-							name="email"
+							name="name"
 						/>
 					</div>
 					<div className="form-group">
@@ -71,6 +62,17 @@ export const AddContact = () => {
 							name="phone"
 						/>
 					</div>
+					<div className="form-group">
+						<label>Email</label>
+						<input
+							type="email"
+							className="form-control"
+							placeholder="Enter email"
+							onChange={handleChange}
+							name="email"
+						/>
+					</div>
+					
 					<div className="form-group">
 						<label>Address</label>
 						<input
