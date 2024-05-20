@@ -14,16 +14,6 @@ export const AddContact = () => {
 		agenda_slug: "luciap"
 	});
 
-	// Este efecto se ejecutará cada vez que full_name cambie
-	// useEffect(() => {
-	// 	if (contactData.full_name) {
-	// 		// Calcular agenda_slug a partir de full_name
-	// 		const agenda_slug = contactData.full_name.toLowerCase().replace(/\s+/g, "");
-	// 		// Actualizar contactData con el nuevo valor de agenda_slug
-	// 		setContactData({ ...contactData, agenda_slug });
-	// 	}
-	// }, [contactData.full_name]); // Dependencia del efecto: contactData.full_name
-
 	const handleChange = e => {
 		const { name, value } = e.target;
 		setContactData({

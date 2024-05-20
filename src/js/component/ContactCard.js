@@ -1,11 +1,14 @@
-// ContactCard.js
 import React from "react";
 import PropTypes from "prop-types";
+import MikePhoto from "../../img/m101.jpg";
 
 export const ContactCard = ({ contact, onDelete, onUpdate }) => {
     return (
         <li className="list-group-item">
             <div className="row w-100">
+            <div className="col-12 col-sm-6 col-md-3 text-center">
+                    <img src={MikePhoto} alt="Mike" style={{ maxWidth: "100px", maxHeight: "100px" }} />
+                </div>
                 <div className="col-12 col-sm-6 col-md-3 px-0">
                     <h4>{contact.name}</h4>
                 </div>
