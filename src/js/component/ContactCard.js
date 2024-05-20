@@ -1,33 +1,29 @@
+// ContactCard.js
 import React from "react";
 import PropTypes from "prop-types";
-import MikePhoto from "../../img/m101.jpg";
 
-export const ContactCard = props => {
+export const ContactCard = ({ contact, onDelete, onUpdate }) => {
     return (
         <li className="list-group-item">
             <div className="row w-100">
                 <div className="col-12 col-sm-6 col-md-3 px-0">
-                    <img src={MikePhoto} alt="Mike Anamendolla" className="rounded-circle mx-auto d-block img-fluid" />
+                    <h4>{contact.name}</h4>
                 </div>
-                <div className="col-12 col-sm-6 col-md-9 text-center text-sm-left">
-                    <div className="float-right">
-                        <button className="btn" onClick={props.onUpdate}>
-                            <i className="fas fa-pencil-alt mr-3" />
-                        </button>
-                        <button className="btn" onClick={props.onDelete}>
-                            <i className="fas fa-trash-alt" />
-                        </button>
-                    </div>
-                    <label className="name lead">{props.contact.name}</label>
-                    <br />
-                    <i className="fas fa-map-marker-alt text-muted mr-3" />
-                    <span className="text-muted">{props.contact.address}</span>
-                    <br />
-                    <span className="fa fa-phone fa-fw text-muted mr-3" data-toggle="tooltip" title="" data-original-title={props.contact.phone} />
-                    <span className="text-muted small">{props.contact.phone}</span>
-                    <br />
-                    <span className="fa fa-envelope fa-fw text-muted mr-3" data-toggle="tooltip" data-original-title="" title="" />
-                    <span className="text-muted small text-truncate">{props.contact.email}</span>
+                <div className="col-12 col-sm-6 col-md-3 text-center">
+                    <span className="fa fa-map-marker fa-fw text-muted" data-toggle="tooltip" title="" data-original-title={contact.address}></span>
+                    <span className="text-muted small">{contact.address}</span>
+                </div>
+                <div className="col-12 col-sm-6 col-md-3 text-center">
+                    <span className="fa fa-phone fa-fw text-muted" data-toggle="tooltip" title="" data-original-title={contact.phone}></span>
+                    <span className="text-muted small">{contact.phone}</span>
+                </div>
+                <div className="col-12 col-sm-6 col-md-3 text-center">
+                    <span className="fa fa-envelope fa-fw text-muted" data-toggle="tooltip" title="" data-original-title={contact.email}></span>
+                    <span className="text-muted small text-truncate">{contact.email}</span>
+                </div>
+                <div className="col-12 col-sm-6 col-md-3 text-center">
+                    <button className="btn btn-info" onClick={onUpdate}>Update</button>
+                    <button className="btn btn-danger" onClick={onDelete}>Delete</button>
                 </div>
             </div>
         </li>
@@ -35,7 +31,7 @@ export const ContactCard = props => {
 };
 
 ContactCard.propTypes = {
+    contact: PropTypes.object.isRequired,
     onDelete: PropTypes.func.isRequired,
-    onUpdate: PropTypes.func.isRequired,
-    contact: PropTypes.object.isRequired
+    onUpdate: PropTypes.func.isRequired
 };

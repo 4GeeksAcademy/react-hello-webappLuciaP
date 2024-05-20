@@ -1,3 +1,4 @@
+// Contacts.js
 import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext.js";
 import { Link } from "react-router-dom";
@@ -13,7 +14,6 @@ export const Contacts = () => {
 
     const { store, actions } = useContext(Context);
 
-    // useEffect para obtener la agenda cuando el componente se monta
     useEffect(() => {
         actions.getAgenda();
     }, []); // La dependencia vacía asegura que solo se llame una vez cuando el componente se monta

@@ -38,17 +38,15 @@ const getState = ({ getStore, getActions, setStore }) => {
                     })
                     .catch(error => console.error("Error creating user:", error));
             },
-            getAgenda: () => {
-                fetch("https://playground.4geeks.com/contact/agendas/luciap/", {
-                    method: "GET",
-                    redirect: "follow"
-                })
-                    .then(response => response.json())
-                    .then(result => {
-                        console.log("Fetched agenda:", result); // Verificar la respuesta
-                        setStore({ agenda: result });
-                    })
-                    .catch(error => console.error("Error fetching agenda:", error));
+            getAgenda: async () => {
+                try {
+                    const response = await fetch('https://playground.4geeks.com/contact/agendas/luciap/contacts');
+                    const data = await response.json();
+                    setStore({ agenda: data.contacts }); // Almacenamos los contactos directamente
+                } catch (error) {
+                    console.error('Error fetching agenda:', error);
+                    setStore({ agenda: [] });
+                }
             },
             deleteContact: (contactId, contact) => {
                 const myHeaders = new Headers();
@@ -68,39 +66,46 @@ const getState = ({ getStore, getActions, setStore }) => {
                         if (!response.ok) {
                             throw new Error(`HTTP error! Status: ${response.status}`);
                         }
-                        return response.json();
+                        // Verificar si la respuesta no está vacía antes de analizarla como JSON
+                        if (response.status === 204) { // No Content
+                            console.log("Contact deleted successfully.");
+                            getActions().getAgenda();
+                        } else {
+                            return response.json();
+                        }
                     })
                     .then(result => {
-                        console.log("Contact deleted:", result);
-                        getActions().getAgenda();
+                        // Si la respuesta no está vacía, se ejecutará este bloque
+                        if (result) {
+                            console.log("Contact deleted:", result);
+                            getActions().getAgenda();
+                        }
                     })
                     .catch(error => console.error("Error deleting contact:", error));
             },
-            updateContact: (contactId, contact) => {
-                const myHeaders = new Headers();
-                myHeaders.append("Content-Type", "application/json");
+            updateContact: async (contactId, updatedContact) => {
+                try {
+                    const response = await fetch(`https://playground.4geeks.com/contact/agendas/luciap/contacts/${contactId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(updatedContact)
+                    });
 
-                const raw = JSON.stringify(contact);
+                    if (!response.ok) {
+                        throw new Error('Failed to update contact');
+                    }
 
-                const requestOptions = {
-                    method: "PUT",
-                    headers: myHeaders,
-                    body: raw,
-                    redirect: "follow"
-                };
+                    const data = await response.json();
+                    const updatedAgenda = getStore().agenda.map(contact =>
+                        contact.id === contactId ? data : contact
+                    );
 
-                fetch(`https://playground.4geeks.com/contact/agendas/luciap/contacts/${contactId}`, requestOptions)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(result => {
-                        console.log("Contact updated:", result);
-                        getActions().getAgenda();
-                    })
-                    .catch(error => console.error("Error updating contact:", error));
+                    setStore({ agenda: updatedAgenda });
+                } catch (error) {
+                    console.error('Error updating contact:', error);
+                }
             }
         }
     };
